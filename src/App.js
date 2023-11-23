@@ -39,7 +39,7 @@ function App() {
   const [questions, status, timeRemaining, currentQues, results, dispatch] =
     useQuiz(initialState);
   const numQuestions = questions.length;
-  console.log(currentQues);
+
   return (
     <div className="app">
       <Header />
@@ -74,10 +74,12 @@ function App() {
             />
             <Controls>
               <Timer timeRemaining={timeRemaining} />
-              <Next
-                onClick={() => dispatch({ type: 'nextQues' })}
-                disable={currentQues.index === questions.length - 1}
-              />
+              {currentQues.optionSelected && (
+                <Next
+                  onClick={() => dispatch({ type: 'nextQues' })}
+                  disable={currentQues.index === questions.length - 1}
+                />
+              )}
             </Controls>
           </Quiz>
         </>
