@@ -1,27 +1,16 @@
 import React from 'react';
 
-function Option({
-  optionSelected,
-  status,
-  questions,
-  currentQues,
-  optionNumber,
-  onClick,
-  children,
-}) {
+function Option({ questions, currentQues, optionNumber, onClick, children }) {
   const { correctOption } = questions[currentQues.index];
   let classes = 'option';
-  if (status !== 'not-attempted') {
+  if (currentQues.optionSelected) {
     if (optionNumber === correctOption) classes += ' correct';
-    else if (optionNumber === optionSelected && status === 'incorrect') {
+    else if (optionNumber === currentQues.optionSelected)
       classes += ' incorrect';
-    } else classes += ' attempted';
+    else classes += ' attempted';
   }
   return (
-    <div
-      className={classes}
-      onClick={() => onClick(optionNumber, correctOption)}
-    >
+    <div className={classes} onClick={() => onClick(optionNumber)}>
       {children}
     </div>
   );

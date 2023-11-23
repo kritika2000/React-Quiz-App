@@ -13,7 +13,6 @@ import Loader from './components/Loader';
 import Error from './components/Error';
 import FinishScreen from './components/FinishScreen';
 import useQuiz from './hooks/useQuiz';
-import Prev from './components/Prev';
 
 // https://www.digitalocean.com/community/tutorials/json-server
 
@@ -22,8 +21,8 @@ const initialState = {
   status: 'loading',
   started: false,
   timeRemaining: {
-    minutes: 0,
-    seconds: 10,
+    minutes: 60,
+    seconds: 0,
   },
   currentQues: {
     index: 0,
@@ -37,66 +36,52 @@ const initialState = {
 };
 
 function App() {
-  const [
-    questions,
-    status,
-    started,
-    timeRemaining,
-    currentQues,
-    results,
-    dispatch,
-  ] = useQuiz(initialState);
+  const [questions, status, timeRemaining, currentQues, results, dispatch] =
+    useQuiz(initialState);
   const numQuestions = questions.length;
-  console.log(questions, status, started, timeRemaining, currentQues, results);
+  console.log(currentQues);
   return (
     <div className="app">
       <Header />
       {status === 'loading' && <Loader />}
       {status === 'error' && <Error />}
-      {status === 'ready' &&
-        (!started ? (
-          timeRemaining.minutes || timeRemaining.seconds ? (
-            <StartScreen
-              numQuestions={numQuestions}
-              onClick={() => dispatch({ type: 'startQuiz' })}
+      {status === 'ready' && (
+        <StartScreen
+          numQuestions={numQuestions}
+          onClick={() => dispatch({ type: 'startQuiz' })}
+        />
+      )}
+      {status === 'finished' && (
+        <FinishScreen
+          pointsGained={results.pointsGained}
+          onClick={() => dispatch({ type: 'restart', payload: initialState })}
+        />
+      )}
+      {status === 'active' && (
+        <>
+          <Progress
+            numQuestions={numQuestions}
+            points={results.pointsGained}
+            numQuestionsAttempted={results.numQuestionsAttempted}
+          />
+          <Quiz>
+            <Question>{questions[currentQues.index]?.question}</Question>
+            <Options
+              key={currentQues.index}
+              currentQues={currentQues}
+              questions={questions}
+              dispatch={dispatch}
             />
-          ) : (
-            <FinishScreen
-              pointsGained={results.pointsGained}
-              onClick={() =>
-                dispatch({ type: 'restart', payload: initialState })
-              }
-            />
-          )
-        ) : (
-          <>
-            <Progress
-              numQuestions={numQuestions}
-              points={results.pointsGained}
-              numQuestionsAttempted={results.numQuestionsAttempted}
-            />
-            <Quiz>
-              <Question>{questions[currentQues.index]?.question}</Question>
-              <Options
-                key={currentQues.index}
-                currentQues={currentQues}
-                questions={questions}
-                dispatch={dispatch}
+            <Controls>
+              <Timer timeRemaining={timeRemaining} />
+              <Next
+                onClick={() => dispatch({ type: 'nextQues' })}
+                disable={currentQues.index === questions.length - 1}
               />
-              <Controls>
-                <Timer timeRemaining={timeRemaining} />
-                <Prev
-                  onClick={() => dispatch({ type: 'prevQues' })}
-                  disable={currentQues.index === 0}
-                />
-                <Next
-                  onClick={() => dispatch({ type: 'nextQues' })}
-                  disable={currentQues.index === questions.length - 1}
-                />
-              </Controls>
-            </Quiz>
-          </>
-        ))}
+            </Controls>
+          </Quiz>
+        </>
+      )}
     </div>
   );
 }

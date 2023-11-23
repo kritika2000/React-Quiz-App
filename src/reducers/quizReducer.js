@@ -14,12 +14,12 @@ function reducer(state, action) {
     case 'startQuiz':
       return {
         ...state,
-        started: true,
+        status: 'active',
       };
     case 'stopQuiz':
       return {
         ...state,
-        started: false,
+        status: 'finished',
       };
     case 'setTime':
       return {
@@ -38,33 +38,33 @@ function reducer(state, action) {
       return {
         ...state,
         currentQues: {
-          ...state.currentQues,
           index:
             state.currentQues.index < state.questions.length
               ? state.currentQues.index + 1
               : state.currentQues.index,
-        },
-      };
-    case 'prevQues':
-      return {
-        ...state,
-        currentQues: {
-          ...state.currentQues,
-          index:
-            state.currentQues.index > 0
-              ? state.currentQues.index - 1
-              : state.currentQues.index,
+          optionSelected: null,
         },
       };
     case 'updateResults':
+      const correctOption =
+        state.questions[state.currentQues.index].correctOption;
+      const currentQuesPoints = state.questions[state.currentQues.index].points;
       return {
         ...state,
+        currentQues: {
+          index: state.currentQues.index,
+          optionSelected: action.payload.optionSelected,
+        },
         results: {
           numQuestionsAttempted: state.results.numQuestionsAttempted + 1,
-          numCorrectAnswers: action.payload.ifCorrect
-            ? state.results.numCorrectAnswers + 1
-            : state.results.numCorrectAnswers,
-          pointsGained: state.results.pointsGained + action.payload.points,
+          numCorrectAnswers:
+            state.currentQues.optionSelected === correctOption
+              ? state.results.numCorrectAnswers + 1
+              : state.results.numCorrectAnswers,
+          pointsGained:
+            state.currentQues.optionSelected === correctOption
+              ? state.results.pointsGained + currentQuesPoints
+              : state.results.pointsGained,
         },
       };
     case 'restart':
