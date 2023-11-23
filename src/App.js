@@ -20,10 +20,6 @@ const initialState = {
   questions: [],
   status: 'loading',
   started: false,
-  timeRemaining: {
-    minutes: 2,
-    seconds: 0,
-  },
   currentQues: {
     index: 0,
     optionSelected: null,
@@ -36,7 +32,7 @@ const initialState = {
 };
 
 function App() {
-  const [questions, status, timeRemaining, currentQues, results, dispatch] =
+  const [questions, status, currentQues, results, dispatch] =
     useQuiz(initialState);
   const numQuestions = questions.length;
 
@@ -73,7 +69,7 @@ function App() {
               dispatch={dispatch}
             />
             <Controls>
-              <Timer timeRemaining={timeRemaining} />
+              <Timer dispatch={dispatch} status={status} />
               {currentQues.optionSelected !== null && (
                 <Next
                   onClick={() =>

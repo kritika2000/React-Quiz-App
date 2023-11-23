@@ -21,19 +21,6 @@ function reducer(state, action) {
         ...state,
         status: 'finished',
       };
-    case 'setTime':
-      return {
-        ...state,
-        timeRemaining: {
-          minutes: !state.timeRemaining.seconds
-            ? state.timeRemaining.minutes - 1
-            : state.timeRemaining.minutes,
-          seconds:
-            state.timeRemaining.seconds === 0
-              ? 59
-              : state.timeRemaining.seconds - 1,
-        },
-      };
     case 'nextQues':
       return {
         ...state,

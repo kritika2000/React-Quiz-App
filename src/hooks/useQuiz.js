@@ -1,10 +1,11 @@
-import { useReducer, useEffect, useRef } from 'react';
+import { useReducer, useEffect } from 'react';
 import quizReducer from '../reducers/quizReducer';
 
 function useQuiz(initialState) {
-  const [{ questions, status, timeRemaining, currentQues, results }, dispatch] =
-    useReducer(quizReducer, initialState);
-  const timeoutID = useRef(null);
+  const [{ questions, status, currentQues, results }, dispatch] = useReducer(
+    quizReducer,
+    initialState
+  );
 
   useEffect(() => {
     if (status === 'loading') {
@@ -22,27 +23,7 @@ function useQuiz(initialState) {
     }
   }, [status]);
 
-  useEffect(() => {
-    if (!timeRemaining.minutes && !timeRemaining.seconds) {
-      dispatch({ type: 'stopQuiz' });
-    }
-  }, [timeRemaining.seconds]);
-
-  useEffect(() => {
-    if (
-      status === 'active' &&
-      (timeRemaining.minutes || timeRemaining.seconds)
-    ) {
-      timeoutID.current = setTimeout(() => {
-        dispatch({ type: 'setTime' });
-      }, 1000);
-    }
-    return () => {
-      clearTimeout(timeoutID.current);
-    };
-  }, [status, timeRemaining.seconds]);
-
-  return [questions, status, timeRemaining, currentQues, results, dispatch];
+  return [questions, status, currentQues, results, dispatch];
 }
 
 export default useQuiz;
