@@ -14,7 +14,6 @@ function Timer({ status, dispatch }) {
   }, [seconds]);
 
   useEffect(() => {
-    console.log(status);
     if (status === 'active') {
       timeoutID.current = setTimeout(() => {
         setTimeRemaining((prev) => ({
