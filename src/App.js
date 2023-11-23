@@ -21,7 +21,7 @@ const initialState = {
   status: 'loading',
   started: false,
   timeRemaining: {
-    minutes: 60,
+    minutes: 2,
     seconds: 0,
   },
   currentQues: {
@@ -74,7 +74,7 @@ function App() {
             />
             <Controls>
               <Timer timeRemaining={timeRemaining} />
-              {currentQues.optionSelected && (
+              {currentQues.optionSelected !== null && (
                 <Next
                   onClick={() => dispatch({ type: 'nextQues' })}
                   disable={currentQues.index === questions.length - 1}

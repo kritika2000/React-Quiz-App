@@ -23,6 +23,12 @@ function useQuiz(initialState) {
   }, [status]);
 
   useEffect(() => {
+    if (!timeRemaining.minutes && !timeRemaining.seconds) {
+      dispatch({ type: 'stopQuiz' });
+    }
+  }, [timeRemaining.seconds]);
+
+  useEffect(() => {
     if (
       status === 'active' &&
       (timeRemaining.minutes || timeRemaining.seconds)
@@ -30,9 +36,6 @@ function useQuiz(initialState) {
       timeoutID.current = setTimeout(() => {
         dispatch({ type: 'setTime' });
       }, 1000);
-    }
-    if (!timeRemaining.minutes && !timeRemaining.seconds) {
-      dispatch({ type: 'stopQuiz' });
     }
     return () => {
       clearTimeout(timeoutID.current);

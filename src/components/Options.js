@@ -10,6 +10,7 @@ function Options({ questions, currentQues, dispatch }) {
       });
     }
   }
+  console.log(currentQues.optionSelected);
   return (
     <div className="optionsContainer">
       {questions[currentQues.index]?.options.map((option, index) => (
