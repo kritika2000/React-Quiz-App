@@ -46,9 +46,8 @@ function reducer(state, action) {
         },
       };
     case 'updateResults':
-      const correctOption =
-        state.questions[state.currentQues.index].correctOption;
-      const currentQuesPoints = state.questions[state.currentQues.index].points;
+      const { correctOption, points } =
+        state.questions[state.currentQues.index];
       return {
         ...state,
         currentQues: {
@@ -58,12 +57,12 @@ function reducer(state, action) {
         results: {
           numQuestionsAttempted: state.results.numQuestionsAttempted + 1,
           numCorrectAnswers:
-            state.currentQues.optionSelected === correctOption
+            action.payload.optionSelected === correctOption
               ? state.results.numCorrectAnswers + 1
               : state.results.numCorrectAnswers,
           pointsGained:
-            state.currentQues.optionSelected === correctOption
-              ? state.results.pointsGained + currentQuesPoints
+            action.payload.optionSelected === correctOption
+              ? state.results.pointsGained + points
               : state.results.pointsGained,
         },
       };
