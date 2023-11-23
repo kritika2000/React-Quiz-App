@@ -1,9 +1,9 @@
 import React from 'react';
 
-function Next({ onClick, disable }) {
+function Next({ onClick, children }) {
   return (
-    <button className="next" onClick={onClick} disabled={disable}>
-      Next
+    <button className="next" onClick={onClick}>
+      {children}
     </button>
   );
 }

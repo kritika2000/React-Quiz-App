@@ -76,9 +76,16 @@ function App() {
               <Timer timeRemaining={timeRemaining} />
               {currentQues.optionSelected !== null && (
                 <Next
-                  onClick={() => dispatch({ type: 'nextQues' })}
-                  disable={currentQues.index === questions.length - 1}
-                />
+                  onClick={() =>
+                    currentQues.index < questions.length - 1
+                      ? dispatch({ type: 'nextQues' })
+                      : dispatch({ type: 'stopQuiz' })
+                  }
+                >
+                  {currentQues.index === questions.length - 1
+                    ? 'Submit'
+                    : 'Next'}
+                </Next>
               )}
             </Controls>
           </Quiz>
